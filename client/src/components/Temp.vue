@@ -1,14 +1,17 @@
 <template>
-    <div></div>
+    <div class="temp">
+
+    </div>
 </template>
 
 <script>
 export default {
-    name: 'form',
+    name: 'Temp',
     data() {
         return {}
-    }
+    },
 }
 </script>
+t
 
 <style lang="scss" scoped></style>

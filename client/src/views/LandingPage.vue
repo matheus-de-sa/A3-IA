@@ -1,11 +1,19 @@
 <template>
     <div class="landing-page">
         <div class="img">
-            <img src="../assets/imgs/logo-fundo.jpg" />
+            <img src="../assets/imgs/LOGO-PNG.png" />
         </div>
         <div class="mt-4 buttons">
-            <button class="my-2 w-100 btn btn-lg btn-outline-primary init">Iniciar</button>
-            <button class="my-2 w-100 btn btn-lg btn-primary doc">Documentação</button>
+            <router-link to="/home">
+                <button class="my-2 w-100 btn btn-lg btn-outline-primary init">
+                    Iniciar
+                </button>
+            </router-link>
+            <router-link to="/documentation">
+                <button class="my-2 w-100 btn btn-lg btn-primary doc">
+                    Documentação
+                </button>
+            </router-link>
         </div>
     </div>
 </template>
@@ -21,6 +29,25 @@
     justify-content: center;
     img {
         width: 100%;
+    }
+}
+
+.init {
+    border: 1px solid #26b2ce;
+    color: #26b2ce;
+    &:hover {
+        background-color: #26b2ce;
+        color: #fff;
+        box-shadow: none;
+    }
+}
+
+.doc {
+    background-color: #2ad1f2;
+    border: 1px solid #26b2ce;
+    &:hover {
+        background-color: #26b2ce;
+        box-shadow: none;
     }
 }
 

@@ -5,8 +5,20 @@ const routes = [
         path: '/',
         name: 'LandingPage',
         component: () =>
-            import(/* webpackChunkName: "home" */ '../views/LandingPage.vue')
-    }
+            import(/* webpackChunkName: "LandingPage" */ '../views/LandingPage.vue'),
+    },
+    {
+        path: '/home',
+        name: 'Home',
+        component: () =>
+            import(/* webpackChunkName: "Home" */ '../views/Home.vue'),
+    },
+    {
+        path: '/documentation',
+        name: 'Doc',
+        component: () =>
+            import(/* webpackChunkName: "Doc" */ '../views/Doc.vue'),
+    },
     // {
     //   path: '/about',
     //   name: 'About',

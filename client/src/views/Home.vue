@@ -45,30 +45,25 @@
                             <input
                                 v-model="form.mode"
                                 class="form-check-input"
-                                type="checkbox"
+                                name="exampleRadios"
+                                type="radio"
                                 value="RL"
-                                id="flexCheckDefault"
+                                id="RL"
                             />
-                            <label
-                                class="form-check-label"
-                                for="flexCheckDefault"
-                            >
+                            <label class="form-check-label" for="RL">
                                 Regressão Linear
                             </label>
                         </div>
                         <div class="form-check">
                             <input
                                 v-model="form.mode"
+                                name="exampleRadios"
                                 class="form-check-input"
-                                type="checkbox"
+                                type="radio"
                                 value="RN"
-                                id="flexCheckChecked"
-                                checked
+                                id="RN"
                             />
-                            <label
-                                class="form-check-label"
-                                for="flexCheckChecked"
-                            >
+                            <label class="form-check-label" for="RN">
                                 Rede Neural
                             </label>
                         </div>
@@ -133,57 +128,42 @@
                     <div class="ms-1">
                         <div class="form-check">
                             <input
+                                v-model="form.specifiTime"
                                 class="form-check-input"
-                                type="checkbox"
-                                value=""
-                                id="flexCheckDefault"
+                                type="radio"
+                                :value="true"
+                                name="radioHour"
+                                id="radioTrue"
                             />
-                            <label
-                                class="form-check-label"
-                                for="flexCheckDefault"
-                            >
+                            <label class="form-check-label" for="radioTrue">
                                 Sim
                             </label>
                         </div>
                         <div class="form-check">
                             <input
+                                v-model="form.specifiTime"
                                 class="form-check-input"
-                                type="checkbox"
-                                value=""
-                                id="flexCheckChecked"
-                                checked
+                                type="radio"
+                                :value="false"
+                                name="radioHour"
+                                id="radioFalse"
                             />
-                            <label
-                                class="form-check-label"
-                                for="flexCheckChecked"
-                            >
+                            <label class="form-check-label" for="radioFalse">
                                 Não
                             </label>
                         </div>
                     </div>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" v-if="form.specifiTime">
                     <label for="exampleInputEmail1" class="form-label">
                         Hora
                     </label>
-                    <input
-                        v-model="form.date"
-                        type="time"
-                        class="form-control"
-                        id="exampleInputEmail1"
-                        aria-describedby="emailHelp"
-                    />
-                </div>
-                <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">
-                        Data
-                    </label>
-                    <input
-                        type="date"
-                        class="form-control"
-                        id="exampleInputEmail1"
-                        aria-describedby="emailHelp"
-                    />
+                    <select id="city" v-model="form.hour" class="form-select">
+                        <option :value="null" selected>Selecione a hora</option>
+                        <option v-for="hora of 24" :key="hora" :value="hora">
+                            {{ `${String(hora).padStart(2, '0')}:00` }}
+                        </option>
+                    </select>
                 </div>
                 <div>
                     <button class="btn btn-primary btn-lg w-100">
@@ -202,10 +182,11 @@ export default {
     name: 'Home',
     data() {
         return {
-            file: [],
             form: {
+                mode: null,
                 state: null,
                 city: null,
+                hour: null,
             },
             states: [
                 { value: 'MG', label: 'Minas Gerais' },
@@ -216,14 +197,15 @@ export default {
             ],
         }
     },
-    mounted() {
-        this.file = readFile('BomJardim')
-    },
+    mounted() {},
     watch: {
         form: {
             hanlder(value) {
-                if (value === 'RN') {
-                }
+                // if (value.mode === 'RN') {
+                //     this.form.mode = 'RN'
+                // } else if (value.mode === 'RL') {
+                //     this.form.mode = 'RL'
+                // }
             },
             deep: true,
         },

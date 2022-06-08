@@ -34,7 +34,7 @@
             </div>
         </nav>
         <div class="content">
-            <form action="">
+            <form @submit.prevent="getResult()">
                 <h2>Descruba o Clima</h2>
                 <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">
@@ -176,7 +176,6 @@
 </template>
 
 <script>
-import readFile from '../utils/readFile'
 
 export default {
     name: 'Home',
@@ -186,29 +185,30 @@ export default {
                 mode: null,
                 state: null,
                 city: null,
-                hour: null,
+                date: null,
+                specifiTime: null,
+                hour: null
             },
             states: [
                 { value: 'MG', label: 'Minas Gerais' },
                 { value: 'RJ', label: 'Rio de Janeiro' },
                 { value: 'RS', label: 'Rio de Grande do Sul' },
                 { value: 'SC', label: 'Santa Catarina' },
-                { value: 'PR', label: 'Paraná' },
-            ],
+                { value: 'PR', label: 'Paraná' }
+            ]
         }
     },
     mounted() {},
-    watch: {
-        form: {
-            hanlder(value) {
-                // if (value.mode === 'RN') {
-                //     this.form.mode = 'RN'
-                // } else if (value.mode === 'RL') {
-                //     this.form.mode = 'RL'
-                // }
-            },
-            deep: true,
-        },
+    methods: {
+        getResult() {
+            let form = this.form
+
+            let query = `/climate/?mode=${form.mode}&state=${form.state}&city=${form.city}&date=${form.date}`
+
+            if (form.specifiTime) query += `&hour=${form.hour}`
+
+            this.$router.push(query)
+        }
     },
     computed: {
         cities() {
@@ -220,7 +220,7 @@ export default {
                         { value: 'Cacador', label: 'Caçador' },
                         { value: 'Chapeco', label: 'Chapecó' },
                         { value: 'Floripa', label: 'Florianópolis' },
-                        { value: 'SaoJoaquim', label: 'São Joaquim' },
+                        { value: 'SaoJoaquim', label: 'São Joaquim' }
                     ]
                 case 'RJ':
                     return [{ value: 'Rio', label: 'Rio de Janeiro' }]
@@ -232,11 +232,11 @@ export default {
                     return [
                         { value: 'Curitiba', label: 'Cúritiba' },
                         { value: 'FozIguacu', label: 'Foz do Iguaçu' },
-                        { value: 'Maringa', label: 'Maringá' },
+                        { value: 'Maringa', label: 'Maringá' }
                     ]
             }
-        },
-    },
+        }
+    }
 }
 </script>
 

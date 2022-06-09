@@ -12,6 +12,7 @@
     "fs": "0.0.1-security",
     "fs.promises": "^0.1.2",
     "ml5": "^0.12.2",
+    "regression": "^2.0.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0"
   },

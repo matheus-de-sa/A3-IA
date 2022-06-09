@@ -3,12 +3,15 @@
         <div v-if="error">
             {{ error }}
         </div>
-        <div v-else></div>
+        <div v-else>
+            {{ form }}
+        </div>
     </div>
 </template>
 
 <script>
 import readFile from '../utils/readFile'
+import linearRegression from '../utils/linearRegression'
 
 export default {
     name: 'Climate',
@@ -30,11 +33,12 @@ export default {
             }
         })
 
-        console.log(this.form)
-
         let data = readFile(this.form.city)
 
         if (!data) this.error = 'Cidade não encontrada ou dados incorretos!'
+
+        if (this.form.mode === 'RL')
+            linearRegression(data, this.form.date, this.form.hour)
     }
 }
 </script>

@@ -18,9 +18,10 @@
     </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .landing-page {
     height: 100%;
+    overflow-y: auto;
     width: 100%;
     padding: 1rem;
     display: flex;
@@ -57,15 +58,31 @@
     /* smartphones, Android phones, landscape iPhone */
 }
 @media (min-width: 600px) {
-    /* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
+    .landing-page {
+        img {
+            width: 70%;
+        }
+    }
 }
 @media (min-width: 801px) {
-    /* tablet, landscape iPad, lo-res laptops ands desktops */
+    .landing-page {
+        img {
+            width: 60%;
+        }
+    }
 }
 @media (min-width: 1025px) {
-    /* big landscape tablets, laptops, and desktops */
+    .landing-page {
+        img {
+            width: 50%;
+        }
+    }
 }
 @media (min-width: 1281px) {
-    /* hi-res laptops and desktops */
+    .landing-page {
+        img {
+            width: 50%;
+        }
+    }
 }
 </style>

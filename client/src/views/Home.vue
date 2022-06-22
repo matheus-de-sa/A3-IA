@@ -1,41 +1,9 @@
 <template>
     <div class="home">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-            <div class="container-fluid">
-                <router-link to="" class="navbar-brand">
-                    <img
-                        src="../assets/imgs/LOGO-PNG-FLAT.png"
-                        alt=""
-                        height="24"
-                /></router-link>
-                <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav"
-                    aria-controls="navbarNav"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a
-                                class="nav-link active"
-                                aria-current="page"
-                                href="#"
-                                >Home</a
-                            >
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        <NavBar></NavBar>
         <div class="content">
             <form @submit.prevent="getResult()">
-                <h2>Descruba o Clima</h2>
+                <h2>Descubra o Clima</h2>
                 <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">
                         Método
@@ -47,6 +15,7 @@
                                 class="form-check-input"
                                 name="exampleRadios"
                                 type="radio"
+                                required
                                 value="RL"
                                 id="RL"
                             />
@@ -61,6 +30,7 @@
                                 class="form-check-input"
                                 type="radio"
                                 value="RN"
+                                required
                                 id="RN"
                             />
                             <label class="form-check-label" for="RN">
@@ -121,52 +91,8 @@
                         aria-describedby="emailHelp"
                     />
                 </div>
-                <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">
-                        Horário Específico?
-                    </label>
-                    <div class="ms-1">
-                        <div class="form-check">
-                            <input
-                                v-model="form.specifiTime"
-                                class="form-check-input"
-                                type="radio"
-                                :value="true"
-                                name="radioHour"
-                                id="radioTrue"
-                            />
-                            <label class="form-check-label" for="radioTrue">
-                                Sim
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input
-                                v-model="form.specifiTime"
-                                class="form-check-input"
-                                type="radio"
-                                :value="false"
-                                name="radioHour"
-                                id="radioFalse"
-                            />
-                            <label class="form-check-label" for="radioFalse">
-                                Não
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3" v-if="form.specifiTime">
-                    <label for="exampleInputEmail1" class="form-label">
-                        Hora
-                    </label>
-                    <select id="city" v-model="form.hour" class="form-select">
-                        <option :value="null" selected>Selecione a hora</option>
-                        <option v-for="hora of 24" :key="hora" :value="hora">
-                            {{ `${String(hora).padStart(2, '0')}:00` }}
-                        </option>
-                    </select>
-                </div>
                 <div>
-                    <button class="btn btn-primary btn-lg w-100">
+                    <button class="doc btn-primary btn btn-lg w-100">
                         Descubra
                     </button>
                 </div>
@@ -176,9 +102,13 @@
 </template>
 
 <script>
+import NavBar from '../components/Navbar.vue'
 
 export default {
     name: 'Home',
+    components: {
+        NavBar
+    },
     data() {
         return {
             form: {
@@ -241,8 +171,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.doc {
+    background-color: #2ad1f2;
+    border: 1px solid #26b2ce;
+    &:hover {
+        background-color: #26b2ce;
+        box-shadow: none;
+    }
+}
+
 .content {
     padding: 1rem;
+    height: 100vh;
+    overflow-y: auto;
     form {
         margin-top: 4rem;
         background-color: #fff;
@@ -253,6 +194,29 @@ export default {
             text-align: left !important;
             margin-left: 0.8rem;
         }
+    }
+}
+
+@media (min-width: 320px) {
+}
+@media (min-width: 480px) {
+    /* smartphones, Android phones, landscape iPhone */
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 801px) {
+    .content {
+        padding: 1rem 10rem;
+    }
+}
+@media (min-width: 1025px) {
+    .content {
+        padding: 1rem 15rem;
+    }
+}
+@media (min-width: 1281px) {
+    .content {
+        padding: 1rem 25rem;
     }
 }
 </style>

@@ -2,18 +2,18 @@ import regression from 'regression'
 import RL from 'regression'
 
 function init(data, date) {
-    let firstDateObj = `${data[0].year}-${data[0].month}-${data[0].day}`
-    let lastDateObj = `${data[data.length - 1].year}-${
-        data[data.length - 1].month
-    }-${data[data.length - 1].day}`
-
-    if (firstDateObj === date) return data[0]
-    if (lastDateObj == date) return data[data.length - 1]
-
     date = date.split('-')
     let year = Number(date[0])
     let month = Number(date[1])
     let day = Number(date[2])
+
+    let findData = data.find(
+        (i) => i.year === year && i.month === month && i.day === day
+    )
+
+    if (findData) return findData
+
+    data = data.filter((item) => item.month === month && item.day === day)
 
     data = data.map((item) => {
         return {
@@ -37,35 +37,50 @@ function init(data, date) {
 
     let result = {}
 
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 24; i++) {
         let datahour = dataFilter.filter((item) => item.time === i)
 
-        let precipitation = datahour.map((item) => item.precipitation)
-        let medTemp = datahour.map((item) => item.medTemp)
-        let maxTemp = datahour.map((item) => item.maxTemp)
-        let minTemp = datahour.map((item) => item.minTemp)
-        let moisture = datahour.map((item) => item.moisture)
-        let wind = datahour.map((item) => item.wind)
+        let years = []
+        let precipitation = []
+        let medTemp = []
+        let maxTemp = []
+        let minTemp = []
+        let moisture = []
+        let wind = []
 
-        console.log(i, precipitation)
-        console.log(i, medTemp)
-        console.log(i, maxTemp)
-        console.log(i, minTemp)
-        console.log(i, moisture)
-        console.log(i, wind)
+        datahour.forEach((i) => {
+            years.push(i.year)
+            precipitation.push(i.precipitation)
+            medTemp.push(i.medTemp)
+            maxTemp.push(i.maxTemp)
+            minTemp.push(i.minTemp)
+            moisture.push(i.moisture)
+            wind.push(i.wind)
+        })
+
+        result[i] = {
+            precipitation: linearRegression(year, years, precipitation),
+            medTemp: linearRegression(year, years, medTemp),
+            maxTemp: linearRegression(year, years, maxTemp),
+            minTemp: linearRegression(year, years, minTemp),
+            moisture: linearRegression(year, years, moisture),
+            wind: linearRegression(year, years, wind)
+        }
     }
 
-    // let teste = regression.linear([
-    //     [0, 1],
-    //     [1, 2],
-    //     [2, 3]
-    // ])
-
-    // console.log('reg', teste.predict([3]))
-
-    // let teste = linearRegression(data)
+    return result
 }
 
-function linearRegression(data) {}
+function linearRegression(year, years, data) {
+    let dataRegress = []
+
+    for (let i = 0; i < data.length; i++) {
+        dataRegress.push([years[i], data[i]])
+    }
+
+    let result = regression.linear(dataRegress)
+
+    return result.predict([year])[1]
+}
 
 export default init

@@ -1,4 +1,3 @@
-import fs from 'fs'
 import BeloHorizonte from '../assets/data/BeloHorizonte.json'
 import BomJardim from '../assets/data/BomJardim.json'
 import Cacador from '../assets/data/Cacador.json'
@@ -23,7 +22,7 @@ const db = {
     FozIguacu,
     Maringa,
     PortoAlegre,
-    RadioNodeList,
+    Rio,
     SaoJoaquim,
     Vacaria,
     Vitoria

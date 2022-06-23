@@ -15,25 +15,9 @@ function init(data, date) {
 
     data = data.filter((item) => item.month === month && item.day === day)
 
-    data = data.map((item) => {
-        return {
-            year: Number(item.year),
-            day: Number(item.day),
-            month: Number(item.month),
-            time: Number(item.time),
-            precipitation: Number(item.precipitation),
-            medTemp: Number(item.medTemp),
-            maxTemp: Number(item.maxTemp),
-            minTemp: Number(item.minTemp),
-            moisture: Number(item.moisture),
-            wind: Number(item.wind)
-        }
-    })
-
-    let dataFilter = data.filter((item) => {
-        if (item.month === month && item.day === day) return true
-        return false
-    })
+    let dataFilter = data.filter(
+        (item) => item.month === month && item.day === day
+    )
 
     let result = {}
 
@@ -59,16 +43,16 @@ function init(data, date) {
         })
 
         result[i] = {
-            precipitation: linearRegression(year, years, precipitation),
-            medTemp: linearRegression(year, years, medTemp),
-            maxTemp: linearRegression(year, years, maxTemp),
-            minTemp: linearRegression(year, years, minTemp),
-            moisture: linearRegression(year, years, moisture),
-            wind: linearRegression(year, years, wind)
+            precipitation: Number(linearRegression(year, years, precipitation)),
+            medTemp: Number(linearRegression(year, years, medTemp)),
+            maxTemp: Number(linearRegression(year, years, maxTemp)),
+            minTemp: Number(linearRegression(year, years, minTemp)),
+            moisture: Number(linearRegression(year, years, moisture)),
+            wind: Number(linearRegression(year, years, wind))
         }
     }
 
-    return result
+    return { result, data: dataFilter }
 }
 
 function linearRegression(year, years, data) {
@@ -80,7 +64,7 @@ function linearRegression(year, years, data) {
 
     let result = regression.linear(dataRegress)
 
-    return result.predict([year])[1]
+    return result.predict([year])[1].toFixed()
 }
 
 export default init

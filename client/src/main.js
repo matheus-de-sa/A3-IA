@@ -1,7 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import readFile from './utils/readFile'
 import Loader from './components/Loader'
 import emitterPlugin from './utils/emitter'
 
@@ -12,9 +11,6 @@ app.use(emitterPlugin)
 app.mixin({
     components: {
         Loader
-    },
-    methods: {
-        readFile,
     }
 })
 

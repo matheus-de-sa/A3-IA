@@ -28,7 +28,7 @@ export default {
 
             this.show = true
 
-            // this.keyIncrement()
+            this.keyIncrement()
         },
         stopLoader() {
             this.show = false
@@ -38,7 +38,7 @@ export default {
 
             setTimeout(() => {
                 this.keyIncrement()
-            }, 500)
+            }, 1000)
         }
     }
 }
@@ -53,7 +53,7 @@ export default {
     position: absolute;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.685);
+    background-color: rgba(255, 255, 255, 1);
     z-index: 1030 !important;
 }
 .fade-enter-active,

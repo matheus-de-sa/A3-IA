@@ -97,16 +97,18 @@
                                 >
                                     <div class="timeline-icon">
                                         <div
-                                            class="d-flex justify-content-center align-items-center flex-column"
+                                            class="d-flex justify-content-center justify-content-md-around align-items-center flex-column flex-md-row"
                                         >
-                                            <i class="mb-2 bx bx-time-five"></i>
+                                            <i
+                                                class="mb-2 mb-md-0 me-md-2 bx bx-time-five"
+                                            ></i>
                                             {{
                                                 `${String(index).padStart(
                                                     2,
                                                     '0'
                                                 )}:00`
                                             }}
-                                            <div>
+                                            <div class="ms-md-4">
                                                 <img
                                                     :src="
                                                         identifyImg(
@@ -228,6 +230,13 @@
                             aria-labelledby="profile-tab"
                         >
                             <div class="mt-4">
+                                <h3>Regressão Linear</h3>
+                                <RegressionChart
+                                    :typeString="'Temp'"
+                                    :data="regressionChart"
+                                ></RegressionChart>
+                            </div>
+                            <div class="mt-4">
                                 <h3>Temperatura</h3>
                                 <LineChart
                                     :typeString="'Temp'"
@@ -278,22 +287,54 @@ import nubladoLua from '../assets/icons/lua-nublado.png'
 import chuvaLua from '../assets/icons/chuva-lua.gif'
 import tempestade from '../assets/icons/tempestade.gif'
 import LineChart from '../components/LineChart.vue'
+import RegressionChart from '../components/RegressionChart.vue'
+import BeloHorizonte from '/public/data/BeloHorizonte.json'
+import BomJardim from '/public/data/BomJardim.json'
+import Cacador from '/public/data/Cacador.json'
+import Chapeco from '/public/data/Chapeco.json'
+import Curitiba from '/public/data/Curitiba.json'
+import Floripa from '/public/data/Floripa.json'
+import FozIguacu from '/public/data/FozIguacu.json'
+import Maringa from '/public/data/Maringa.json'
+import PortoAlegre from '/public/data/PortoAlegre.json'
+import Rio from '/public/data/Rio.json'
+import SaoJoaquim from '/public/data/SaoJoaquim.json'
+import Vacaria from '/public/data/Vacaria.json'
+import Vitoria from '/public/data/Vitoria.json'
+
+const db = {
+    BeloHorizonte,
+    BomJardim,
+    Cacador,
+    Chapeco,
+    Curitiba,
+    Floripa,
+    FozIguacu,
+    Maringa,
+    PortoAlegre,
+    Rio,
+    SaoJoaquim,
+    Vacaria,
+    Vitoria
+}
 
 export default {
     name: 'Climate',
     components: {
         NavBar,
-        LineChart
+        LineChart,
+        RegressionChart
     },
     data() {
         return {
             form: {},
             error: null,
             data: {},
-            chartObj: null
+            chartObj: null,
+            dataRegres: []
         }
     },
-    mounted() {
+    async mounted() {
         this.$refs.Loader.startLoader()
 
         let queryObj = this.$route.query
@@ -306,18 +347,134 @@ export default {
             }
         })
 
-        let data = this.readFile(this.form.city)
+        let data = db[this.form.city]
 
         if (!data) this.error = 'Cidade não encontrada ou dados incorretos!'
 
-        if (this.form.mode === 'RL')
-            this.data = linearRegression(data, this.form.date, this.form.hour)
-        else if (this.form.mode === 'RN')
-            this.data = neuralNetwork(data, this.form.date)
+        data = data.map((item) => {
+            return {
+                year: Number(item.year),
+                day: Number(item.day),
+                month: Number(item.month),
+                time: Number(item.time),
+                precipitation: Number(item.precipitation),
+                medTemp: Number(item.medTemp),
+                maxTemp: Number(item.maxTemp),
+                minTemp: Number(item.minTemp),
+                moisture: Number(item.moisture),
+                wind: Number(item.wind)
+            }
+        })
 
-        this.$refs.Loader.stopLoader()
+        if (this.form.mode === 'RL') {
+            let result = linearRegression(data, this.form.date)
+
+            this.data = result.result
+
+            this.dataRegres = result.data
+
+            setTimeout(() => {
+                this.$refs.Loader.stopLoader()
+            }, 2000)
+        } else if (this.form.mode === 'RN') {
+            let result = neuralNetwork(data, this.form.date)
+
+            this.data = result.result
+
+            this.dataRegres = result.data
+
+            setTimeout(() => {
+                this.$refs.Loader.stopLoader()
+            }, 3000)
+        }
     },
     computed: {
+        regressionChart() {
+            if (this.dataRegres.length) {
+                let data = this.dataRegres
+
+                let labels = []
+                let labelsText = []
+                let medTemp = []
+
+                for (let i = 0; i < data.length; i++) {
+                    labels.push(data[i].year)
+                    labelsText.push(`${data[i].year} | ${data[i].time}`)
+                    medTemp.push(data[i].medTemp)
+                }
+
+                let med_x = labels.reduce((a, b) => a + b, 0) / labels.length
+                let med_y = medTemp.reduce((a, b) => a + b, 0) / medTemp.length
+
+                let range_x = []
+                let range_y = []
+
+                let mult = []
+                let pot = []
+
+                for (let i = 0; i < medTemp.length; i++) {
+                    let x = labels[i] - med_x
+                    let y = medTemp[i] - med_y
+                    range_x.push(x)
+                    range_y.push(y)
+                }
+
+                for (let i = 0; i < medTemp.length; i++) {
+                    mult.push(Math.abs(range_x[i] * range_y[i]))
+                    pot.push(Math.abs(Math.pow(range_x[i], 2)))
+                }
+
+                let multRed = mult.reduce((a, b) => a + b, 0)
+                let potRed = pot.reduce((a, b) => a + b, 0)
+
+                let b = multRed / potRed
+                let a = -med_y + b * med_x
+
+                let hat = []
+
+                for (let i = 0; i < medTemp.length; i++) {
+                    let calc = a + b * labels[i]
+
+                    hat.push(calc / 100)
+                }
+
+                let medTempNum = 0
+                let count = 0
+
+                while (medTempNum <= 0) {
+                    medTempNum = hat[0] - medTemp[count]
+                    count++
+                }
+
+                if (medTempNum > 10) {
+                    hat = hat.map((item) => item - medTempNum)
+                }
+
+                let datasets = [
+                    {
+                        type: 'line',
+                        label: 'Linha de Tendência',
+                        backgroundColor: '#EB4010',
+                        borderColor: '#EB4010',
+                        data: hat
+                    },
+                    {
+                        type: 'scatter',
+                        label: 'Valores Reais',
+                        backgroundColor: '#00FAE6',
+                        borderColor: '#00FAE6',
+                        data: medTemp
+                    }
+                ]
+
+                return {
+                    labels: labels,
+                    datasets
+                }
+            }
+
+            return []
+        },
         dataTest() {
             if (this.data) {
                 let data = this.data
@@ -363,7 +520,10 @@ export default {
                 case 'RJ':
                     return [{ value: 'Rio', label: 'Rio de Janeiro' }]
                 case 'RS':
-                    return [{ value: 'PortoAlegre', label: 'Porto Alegre' }]
+                    return [
+                        { value: 'PortoAlegre', label: 'Porto Alegre' },
+                        { value: 'Vacaria', label: 'Vacaria' }
+                    ]
                 case 'MG':
                     return [{ value: 'BeloHorizonte', label: 'Belo Horizonte' }]
                 case 'PR':
@@ -372,6 +532,8 @@ export default {
                         { value: 'FozIguacu', label: 'Foz do Iguaçu' },
                         { value: 'Maringa', label: 'Maringá' }
                     ]
+                case 'ES':
+                    return [{ value: 'Vitoria', label: 'Vitória' }]
             }
         },
         chartTemp() {
@@ -523,10 +685,10 @@ export default {
             return `${value} mm/h`
         },
         identifyRain(data, type, img) {
-            if (data.precipitation > 10) {
+            if (data.precipitation > 2) {
                 return tempestade
             }
-            if (data.precipitation > 2.5) {
+            if (data.precipitation >= 1) {
                 switch (type) {
                     case 'neve':
                         return chuva
@@ -627,7 +789,7 @@ export default {
                 return a + b
             })
 
-            return Number((total / num.length).toFixed(2))
+            return Number((total / num.length).toFixed())
         },
         replaceCelsius(value) {
             return `${String(value).replace('.', ',')} ºC`
@@ -692,6 +854,26 @@ export default {
             span {
                 font-size: 0.8rem;
                 font-family: sans-serif;
+            }
+        }
+    }
+}
+
+@media (min-width: 801px) {
+    .timeline {
+        .timeline-icon {
+            img {
+                width: 50px;
+            }
+        }
+        .timeline-content {
+            margin-left: 5px;
+            width: 80%;
+            font-size: 1rem;
+            i {
+                span {
+                    font-size: 1rem;
+                }
             }
         }
     }

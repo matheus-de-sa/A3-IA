@@ -124,7 +124,8 @@ export default {
                 { value: 'RJ', label: 'Rio de Janeiro' },
                 { value: 'RS', label: 'Rio de Grande do Sul' },
                 { value: 'SC', label: 'Santa Catarina' },
-                { value: 'PR', label: 'Paraná' }
+                { value: 'PR', label: 'Paraná' },
+                { value: 'ES', label: 'Espirito Santo' }
             ]
         }
     },
@@ -155,7 +156,10 @@ export default {
                 case 'RJ':
                     return [{ value: 'Rio', label: 'Rio de Janeiro' }]
                 case 'RS':
-                    return [{ value: 'PortoAlegre', label: 'Porto Alegre' }]
+                    return [
+                        { value: 'PortoAlegre', label: 'Porto Alegre' },
+                        { value: 'Vacaria', label: 'Vacaria' }
+                    ]
                 case 'MG':
                     return [{ value: 'BeloHorizonte', label: 'Belo Horizonte' }]
                 case 'PR':
@@ -163,6 +167,10 @@ export default {
                         { value: 'Curitiba', label: 'Cúritiba' },
                         { value: 'FozIguacu', label: 'Foz do Iguaçu' },
                         { value: 'Maringa', label: 'Maringá' }
+                    ]
+                case 'ES':
+                    return [
+                        { value: 'Vitoria', label: 'Vitória' },
                     ]
             }
         }

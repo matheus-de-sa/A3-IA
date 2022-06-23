@@ -9,11 +9,11 @@
                     Iniciar
                 </button>
             </router-link>
-            <router-link to="/documentation">
+            <!-- <router-link to="/documentation">
                 <button class="my-2 w-100 btn btn-lg btn-primary doc">
                     Documentação
                 </button>
-            </router-link>
+            </router-link> -->
         </div>
     </div>
 </template>

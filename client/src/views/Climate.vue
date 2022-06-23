@@ -273,6 +273,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import linearRegression from '../utils/linearRegression'
 import neuralNetwork from '../utils/neuralNetwork'
 import NavBar from '../components/Navbar.vue'
@@ -288,35 +289,6 @@ import chuvaLua from '../assets/icons/chuva-lua.gif'
 import tempestade from '../assets/icons/tempestade.gif'
 import LineChart from '../components/LineChart.vue'
 import RegressionChart from '../components/RegressionChart.vue'
-import BeloHorizonte from '/public/data/BeloHorizonte.json'
-import BomJardim from '/public/data/BomJardim.json'
-import Cacador from '/public/data/Cacador.json'
-import Chapeco from '/public/data/Chapeco.json'
-import Curitiba from '/public/data/Curitiba.json'
-import Floripa from '/public/data/Floripa.json'
-import FozIguacu from '/public/data/FozIguacu.json'
-import Maringa from '/public/data/Maringa.json'
-import PortoAlegre from '/public/data/PortoAlegre.json'
-import Rio from '/public/data/Rio.json'
-import SaoJoaquim from '/public/data/SaoJoaquim.json'
-import Vacaria from '/public/data/Vacaria.json'
-import Vitoria from '/public/data/Vitoria.json'
-
-const db = {
-    BeloHorizonte,
-    BomJardim,
-    Cacador,
-    Chapeco,
-    Curitiba,
-    Floripa,
-    FozIguacu,
-    Maringa,
-    PortoAlegre,
-    Rio,
-    SaoJoaquim,
-    Vacaria,
-    Vitoria
-}
 
 export default {
     name: 'Climate',
@@ -347,7 +319,7 @@ export default {
             }
         })
 
-        let data = db[this.form.city]
+        let data = await this.fetchData(this.form.city)
 
         if (!data) this.error = 'Cidade não encontrada ou dados incorretos!'
 
@@ -678,6 +650,15 @@ export default {
         }
     },
     methods: {
+        async fetchData(data) {
+            console.log('aqui1111')
+
+            let result = await axios.get(`/data/${data}.json`)
+
+            console.log(result)
+
+            return result.data
+        },
         calcPrecipitation(value) {
             if (value <= 0) {
                 return '0 mm/h'
